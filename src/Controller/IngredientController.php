@@ -72,4 +72,31 @@ function new (Request $request , EntityManagerInterface $manager): Response
         ['form' => $form->createView()]);
 }
 
+
+#[Route('/ingredient/edit/{id}', name:'app_edit', methods:['GET', 'POST'])]
+function update (Ingredient $ingredient , Request $request , EntityManagerInterface $manager) : Response
+{
+    
+    $form = $this->createForm(IngredientType::class, $ingredient);
+    $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+           
+            
+            $Ingredients = $form->getData();
+
+            $manager->persist($Ingredients); // ... perform some action, such as saving the task to the database
+            $manager->flush();
+
+            $this->addFlash(
+                'notice',
+                'le produit est modifié avec succes !'
+            );
+
+            return $this->redirectToRoute('app_ingredient');
+        }
+
+    return $this->render('pages/ingredient/edit.html.twig',
+        ['form' => $form->createView()]);
+}
+
 }
