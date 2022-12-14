@@ -24,6 +24,8 @@
   <div class="card-body">
     <h4 class="card-title">{{ingredients.price}} $</h4>
     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="{{path('app_edit' ,{'id':ingredients.id})}}" class="btn btn-info">Modifier</a>
+    <a href="{{path('app_delete' ,{'id':ingredients.id})}}" class="btn btn-danger">delete</a>
   </div>
 </div>
 
