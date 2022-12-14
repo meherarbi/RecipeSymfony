@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Ingredient !{% endblock %}
+
+{% block body %}
+<div class="container mt-3 ">
+
+<div class="count">
+    {{ ingredients.getTotalItemCount }} ingrédient(s)
+</div>
+
+{% if not ingredients.items is same as([]) %}
+ {% for message in app.flashes('notice') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
+{% for ingredients in ingredients %}
+
+
+<div class="card border-danger mb-3 " style="max-width: 20rem;">
+  <div class="card-header"><small>{{ ingredients.id}} </small>{{ingredients.name}}</div>
+  <span class="card-title ">  Publié le {{ingredients.createdAt| format_datetime ('short', 'short', locale='tn')}}</span>
+  <div class="card-body">
+    <h4 class="card-title">{{ingredients.price}} $</h4>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+  </div>
+</div>
+
+{% endfor %}
+<div class="navigation d-flex justify-content-center">
+    {{ knp_pagination_render(ingredients) }}
+</div>
+{% else %}
+			<h4>Il n'y a pas d'ingrédients</h4>
+
+			{# <a href="{{ path('ingredient.new') }}" class="btn btn-primary">
+				Créer un ingrédient
+			</a> #}
+		
+
+{% endif %}
+</div>
+
+
+
+{% endblock %}
