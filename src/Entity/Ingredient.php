@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\IngredientRepository;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
@@ -21,8 +21,6 @@ class Ingredient
     #[Assert\Length(
         min: 2,
         max: 30,
-        minMessage: 'Your first name must be at least {{ limit }} characters long',
-        maxMessage: 'Your first name cannot be longer than {{ limit }} characters',
     )]
     private ?string $name = null;
 
