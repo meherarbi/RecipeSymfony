@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity('name')]
+#[UniqueEntity('fullName')]
 #[UniqueEntity('pseudo')]
 #[ORM\EntityListeners(['App\EntityListener\UserListener'])]
 
@@ -43,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank()]
     #[Assert\Length(
-        min: 5,
+        min: 3,
         max: 30,
     )]
     private ?string $fullName = null;
