@@ -24,9 +24,11 @@ function index(AuthenticationUtils $authenticationUtils): Response
         'last_username' => $lastUsername,
         'error' => $error,
     ]);
-
-
-    
-
+}
+#[Route('/logout', name:'app_logout', methods:['GET'])]
+function logout()
+    {
+    // controller can be blank: it will never be called!
+    throw new \Exception('Don\'t forget to activate logout in security.yaml');
 }
 }
