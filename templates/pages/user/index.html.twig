@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+<div class="container">
+<table class="table table-hover">
+  <thead>
+    <tr>   
+      <th scope="col">FullName</th>
+      <th scope="col">Pseudo</th>
+      <th scope="col">Email</th>
+      <th scope="col">Date d'ajout</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for users in users %}
+    <tr class="table-active">
+      <td>{{ users.fullname }}</td>
+      <td>{{users.pseudo}}</td>
+      <td>{{ users.email }}</td>
+      <td>{{ users.createdAt | format_datetime ('short', 'short', locale='tn') }}</td>
+    </tr>
+    <tr>  
+    </tbody>
+    {% endfor %}
+</table>
+</div>
+
+{% endblock %}
