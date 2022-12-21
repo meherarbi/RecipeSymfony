@@ -11,10 +11,19 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
+    /**
+     * This function allow all user
+     *
+     * @param UserRepository $userRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/user', name: 'app_user')]
     public function index(UserRepository $userRepository , PaginatorInterface $paginator , Request $request): Response
     {
@@ -30,9 +39,16 @@ class UserController extends AbstractController
             'users' => $users,
         ]);
     }
-
+    
+    /**
+     * this function allow to edit the user
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
     #[Route('/new_user', name: 'app_new_user', methods: ['GET', 'POST'])]
-    public function addUser(UserRepository $userRepository, Request $request, EntityManagerInterface $manager ) : Response
+    public function addUser( Request $request, EntityManagerInterface $manager ) : Response
     {
         $user = new User();
 
@@ -56,6 +72,60 @@ class UserController extends AbstractController
             ['form' => $form->createView()]
         );
     }
-
    
+    #[Route('/edit_user/{id}', name: 'app_edit_user', methods: ['GET', 'POST'])]
+    public function editUser(Request $request, EntityManagerInterface $manager, User $user , UserPasswordHasherInterface $hasher): Response
+    {
+        
+
+        $form = $this->createForm(UserType::class, $user);
+        
+        $form->handleRequest($request);
+        
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($hasher->isPasswordValid($user,$form->getData()->getPlainPassword()))
+
+            {
+               $user = $form->getData();
+            
+               $manager->persist($user);
+               $manager->flush();
+               $this->addFlash(
+                'notice',
+                'l\'utilisateur est modifié avec succes !'
+               );
+               return $this->redirectToRoute('app_user');
+            }
+            else
+            {
+                $this->addFlash(
+                    'warning',
+                    'le mot de passe n\'est pas valide !'
+                );
+            }
+
+            
+
+        }
+
+        return $this->render(
+            'pages/user/edit_user.html.twig',
+            ['form' => $form->createView()]
+        );
+    }
+    
+
+    #[Route('/delete_user/{id}', name: 'app_edelete_user', methods: ['GET'])]
+    public function delete(EntityManagerInterface $manager, User $user)
+    {
+        $manager->remove($user);
+        $manager->flush();
+            $this->addFlash(
+                'notice',
+                'l\'utilisateur est supprimer avec succes !'
+            );
+
+            return $this->redirectToRoute('app_user');
+    }
 }
