@@ -59,7 +59,7 @@ function new (Request $request, EntityManagerInterface $manager): Response {
 
         $this->addFlash(
             'notice',
-            'le produit est ajouté avec succes !'
+            'l\'ingredient est ajouté avec succes !'
         );
 
         return $this->redirectToRoute('app_ingredient');

@@ -4,6 +4,10 @@
 
 {% block body %}
 <div class="container">
+ {% if not users.items is same as([]) %}
+<div class="count">
+    {{ users.getTotalItemCount }} User(s)
+</div>
 <table class="table table-hover">
   <thead>
     <tr>   
@@ -14,6 +18,12 @@
     </tr>
   </thead>
   <tbody>
+ 
+ {% for message in app.flashes('notice') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
   {% for users in users %}
     <tr class="table-active">
       <td>{{ users.fullname }}</td>
@@ -24,7 +34,22 @@
     <tr>  
     </tbody>
     {% endfor %}
+   
 </table>
+<div class="navigation d-flex justify-content-center">
+    {{ knp_pagination_render(users) }}
+</div>
+{% else %}
+			<h4>Il n'y a pas d'utilisateur</h4>
+
+			<a href="{{ path('app_new_user') }}" class="btn btn-primary">
+				Créer un utilisateur
+			</a>
+             {% endif %}
+             <a href="{{ path('app_new_user') }}" class="btn btn-primary">
+				Créer un utilisateur
+			</a>
+		
 </div>
 
 {% endblock %}
