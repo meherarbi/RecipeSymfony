@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -59,9 +61,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotNull()]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Assert\NotNull()]
+    private \DateTimeImmutable $updatedAt;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Ingredient::class, orphanRemoval: true)]
+    private Collection $Ingredient;
+
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+        $this->Ingredient = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -174,15 +186,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 	 * @return string|null
 	 */
 	public function getPlainPassword(): ?string {
-		return $this->plainPassword;
-	}
+                     		return $this->plainPassword;
+                     	}
 	
 	/**
 	 * @param string|null $plainPassword 
 	 * @return self
 	 */
 	public function setPlainPassword(?string $plainPassword): self {
-		$this->plainPassword = $plainPassword;
-		return $this;
-	}
+                     		$this->plainPassword = $plainPassword;
+                     		return $this;
+                     	}
+
+	public function getUpdatedAt(): ?\DateTimeImmutable
+                         {
+                             return $this->updatedAt;
+                         }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ingredient>
+     */
+    public function getIngredient(): Collection
+    {
+        return $this->Ingredient;
+    }
+
+    public function addIngredient(Ingredient $ingredient): self
+    {
+        if (!$this->Ingredient->contains($ingredient)) {
+            $this->Ingredient->add($ingredient);
+            $ingredient->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIngredient(Ingredient $ingredient): self
+    {
+        if ($this->Ingredient->removeElement($ingredient)) {
+            // set the owning side to null (unless already changed)
+            if ($ingredient->getUser() === $this) {
+                $ingredient->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

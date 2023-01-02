@@ -20,22 +20,31 @@ class LoginController extends AbstractController
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
-    #[Route('/login', name:'app_login')]
+    #[Route('/login', name:'app_login',methods: ['GET', 'POST']),]
 function index(AuthenticationUtils $authenticationUtils): Response
     {
     // get the login error if there is one
+    if ($this->getUser()) {
+        return $this->redirectToRoute('app_user');
+    }
+    
     $error = $authenticationUtils->getLastAuthenticationError();
 
     // last username entered by the user
     $lastUsername = $authenticationUtils->getLastUsername();
+    
+    
+    
 
     return $this->render('pages/login/login.html.twig', [
         'controller_name' => 'LoginController',
         'last_username' => $lastUsername,
         'error' => $error,
     ]);
+   
+    
 }
-#[Route('/logout', name:'app_logout', methods:['GET'])]
+#[Route('/logout', name:'app_logout')]
 function logout()
     {
     // controller can be blank: it will never be called!
@@ -60,13 +69,15 @@ function register(Request $request, EntityManagerInterface $manager)
 
         $user = $form->getData();
 
+        $this->addFlash(
+            'notice',
+            ' votre compte a bien été créé !'
+        );
+
         $manager->persist($user); // ... perform some action, such as saving the task to the database
         $manager->flush();
 
-        $this->addFlash(
-            'notice',
-            ' succes !'
-        );
+        
 
         return $this->redirectToRoute('app_login');
     }

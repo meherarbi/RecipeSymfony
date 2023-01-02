@@ -7,6 +7,7 @@ use App\Form\IngredientType;
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,13 +24,15 @@ class IngredientController extends AbstractController
      * @return Response
      */
     #[Route('/ingredient', name:'app_ingredient', methods:['GET'])]
+    #[IsGranted('ROLE_USER')]
 function index(IngredientRepository $ingredientRepository, PaginatorInterface $paginator, Request $request): Response
     {
-    $ingredients = $paginator->paginate(
-        $ingredientRepository->findAll(),
-        $request->query->getInt('page', 1), /*page number*/
-        5/*limit per page*/
-    );
+   $ingredients = $paginator->paginate(
+    $ingredientRepository->findBy(['user' => $this->getUser()]),
+    $request->query->getInt('page', 1), /*page number*/
+    5/*limit per page*/
+);
+
 
     return $this->render('pages/ingredient/index.html.twig',
         ['ingredients' => $ingredients]);

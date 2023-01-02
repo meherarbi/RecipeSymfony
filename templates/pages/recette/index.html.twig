@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Recette !{% endblock %}
+
+{% block body %}
+<div class="container mt-3 ">
+
+<div class="count">
+    {{ recettes.getTotalItemCount }} Recette(s)
+</div>
+
+{% if not recettes.items is same as([]) %}
+ {% for message in app.flashes('notice') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
+{% for recettes in recettes %}
+
+
+<div class="card border-danger mb-3 " style="max-width: 20rem;">
+  <div class="card-header"><small>{{ recettes.id}} </small>{{recettes.name}}</div>
+  <span class="card-title ">  Publié le {{recettes.createdAt| format_datetime ('short', 'short', locale='tn')}}</span>
+  <div class="card-body">
+    <h4 class="card-title">{{recettes.price}} $</h4>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="{{path('app_edit_recette' ,{'id':recettes.id})}}" class="btn btn-info">Modifier</a>
+    <a href="{{path('app_delete_recette' ,{'id':recettes.id})}}" class="btn btn-danger">delete</a>
+  </div>
+</div>
+
+{% endfor %}
+<div class="navigation d-flex justify-content-center">
+    {{ knp_pagination_render(recettes) }}
+</div>
+{% else %}
+			<h4>Il n'y a pas de recette</h4>
+
+			
+		
+
+{% endif %}
+<a href="{{ path('app_new_recette') }}" class="btn btn-primary">
+				Créer une recette
+			</a>
+      
+</div>
+
+
+
+{% endblock %}

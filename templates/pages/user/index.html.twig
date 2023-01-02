@@ -31,8 +31,8 @@
       <td>{{users.pseudo}}</td>
       <td>{{ users.email }}</td>
       <td>{{ users.createdAt | format_datetime ('short', 'short', locale='tn') }}</td>
-      <td><a href="{{ path('app_new_user') }}" class="btn btn-primary">
-				Ajouter 
+      <td><a href="{{ path('app_edit_password',{'id': users.id}) }}" class="btn btn-primary">
+				Modifier le mot de passe 
 			</a>&nbsp;&nbsp;
             <a href="{{ path('app_edit_user' , {'id': users.id}) }}" class="btn btn-success"><i class="fas fa-edit"></i>
 				modifier 
