@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+{{recette.name}} 
+
+{% for ingrédient in recette.ingredients %}
+{{ingrédient.name}}
+{% endfor %}
+{% endblock %}
+

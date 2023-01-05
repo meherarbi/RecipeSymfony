@@ -30,7 +30,7 @@ function index(RecetteRepository $recetteRepository, PaginatorInterface $paginat
    $recettes = $paginator->paginate(
     $recetteRepository->findAll(),
     $request->query->getInt('page', 1), /*page number*/
-    5/*limit per page*/
+    12/*limit per page*/
 );
 
 
@@ -108,6 +108,14 @@ function Delete(EntityManagerInterface $manager, Recette $recette)
         'l\'recette est supprimer avec succes !'
     );
     return $this->redirectToRoute('app_recette');
+}
+
+#[Route('/recette/show/{id}', name:'app_show_recette', methods:['GET'])]
+function Show(Recette $recette)
+{
+        return $this->render('pages/recette/show.html.twig',
+        ['recette' => $recette]
+    );
 }
 
 }

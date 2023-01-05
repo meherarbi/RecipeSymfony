@@ -23,6 +23,7 @@ class LoginController extends AbstractController
     #[Route('/login', name:'app_login',methods: ['GET', 'POST']),]
 function index(AuthenticationUtils $authenticationUtils): Response
     {
+        
     // get the login error if there is one
     if ($this->getUser()) {
         return $this->redirectToRoute('app_user');
@@ -61,6 +62,7 @@ function logout()
 function register(Request $request, EntityManagerInterface $manager)
     {
     $user = new User();
+    
     $user->setRoles(array('ROLE_USER'));
     $form = $this->createForm(RegistrationType::class, $user);
     $form->handleRequest($request);
@@ -76,8 +78,6 @@ function register(Request $request, EntityManagerInterface $manager)
 
         $manager->persist($user); // ... perform some action, such as saving the task to the database
         $manager->flush();
-
-        
 
         return $this->redirectToRoute('app_login');
     }

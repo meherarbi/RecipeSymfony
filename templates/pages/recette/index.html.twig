@@ -15,11 +15,13 @@
         {{ message }}
     </div>
 {% endfor %}
+<div class="d-flex justify-content-center flex-wrap">
+
 {% for recettes in recettes %}
 
 
 <div class="card border-danger mb-3 " style="max-width: 20rem;">
-  <div class="card-header"><small>{{ recettes.id}} </small>{{recettes.name}}</div>
+  <div class="card-header"><small>{{ recettes.id}} </small><a href="{{path('app_show_recette' ,{'id': recettes.id})}}">{{recettes.name}}</a></div>
   <span class="card-title ">  Publié le {{recettes.createdAt| format_datetime ('short', 'short', locale='tn')}}</span>
   <div class="card-body">
     <h4 class="card-title">{{recettes.price}} $</h4>
@@ -30,6 +32,8 @@
 </div>
 
 {% endfor %}
+</div>
+
 <div class="navigation d-flex justify-content-center">
     {{ knp_pagination_render(recettes) }}
 </div>
