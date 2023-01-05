@@ -50,11 +50,17 @@ class Recette
     #[ORM\Column]
     private ?bool $isPublic = null;
 
+    #[ORM\OneToMany(mappedBy: 'recette', targetEntity: Mark::class, orphanRemoval: true)]
+    private Collection $marks;
+
+    private ?float $average = null;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable('', new \DateTimeZone('Africa/Tunis'));
         $this->updatedAt = new \DateTimeImmutable('', new \DateTimeZone('Africa/Tunis'));
+        $this->marks = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -211,4 +217,58 @@ class Recette
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Mark>
+     */
+    public function getMarks(): Collection
+    {
+        return $this->marks;
+    }
+
+    public function addMark(Mark $mark): self
+    {
+        if (!$this->marks->contains($mark)) {
+            $this->marks->add($mark);
+            $mark->setRecette($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMark(Mark $mark): self
+    {
+        if ($this->marks->removeElement($mark)) {
+            // set the owning side to null (unless already changed)
+            if ($mark->getRecette() === $this) {
+                $mark->setRecette(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of average
+     */
+    public function getAverage()
+    {
+        $marks = $this->marks;
+
+        if ($marks->toArray() === []) {
+            $this->average = null;
+            return $this->average;
+        }
+
+        $total = 0;
+        foreach ($marks as $mark) {
+            $total += $mark->getMark();
+        }
+
+        $this->average = $total / count($marks);
+
+        return $this->average;
+    }
+
 }

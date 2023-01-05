@@ -3,9 +3,14 @@
 {% block body %}
 
 {{recette.name}} 
-
+les ingredients :
 {% for ingrédient in recette.ingredients %}
 {{ingrédient.name}}
 {% endfor %}
+le Totale des avis: {{recette.average | number_format (2.'.',',')}}
+
+
+
+{{form(form)}}
 {% endblock %}
 

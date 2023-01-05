@@ -68,12 +68,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Ingredient::class, orphanRemoval: true)]
     private Collection $Ingredient;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Mark::class, orphanRemoval: true)]
+    private Collection $marks;
+
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
         $this->Ingredient = new ArrayCollection();
+        $this->marks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -186,22 +190,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 	 * @return string|null
 	 */
 	public function getPlainPassword(): ?string {
-                     		return $this->plainPassword;
-                     	}
+                                    		return $this->plainPassword;
+                                    	}
 	
 	/**
 	 * @param string|null $plainPassword 
 	 * @return self
 	 */
 	public function setPlainPassword(?string $plainPassword): self {
-                     		$this->plainPassword = $plainPassword;
-                     		return $this;
-                     	}
+                                    		$this->plainPassword = $plainPassword;
+                                    		return $this;
+                                    	}
 
 	public function getUpdatedAt(): ?\DateTimeImmutable
-                         {
-                             return $this->updatedAt;
-                         }
+                                        {
+                                            return $this->updatedAt;
+                                        }
 
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
@@ -234,6 +238,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($ingredient->getUser() === $this) {
                 $ingredient->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Mark>
+     */
+    public function getMarks(): Collection
+    {
+        return $this->marks;
+    }
+
+    public function addMark(Mark $mark): self
+    {
+        if (!$this->marks->contains($mark)) {
+            $this->marks->add($mark);
+            $mark->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMark(Mark $mark): self
+    {
+        if ($this->marks->removeElement($mark)) {
+            // set the owning side to null (unless already changed)
+            if ($mark->getUser() === $this) {
+                $mark->setUser(null);
             }
         }
 
