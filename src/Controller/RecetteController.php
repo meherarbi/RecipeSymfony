@@ -2,16 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Mark;
+use App\Form\MarkType;
 use App\Entity\Recette;
 use App\Form\RecetteType;
+use App\Repository\MarkRepository;
 use App\Repository\RecetteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RecetteController extends AbstractController
 {
@@ -110,12 +113,48 @@ function Delete(EntityManagerInterface $manager, Recette $recette)
     return $this->redirectToRoute('app_recette');
 }
 
-#[Route('/recette/show/{id}', name:'app_show_recette', methods:['GET'])]
-function Show(Recette $recette)
-{
-        return $this->render('pages/recette/show.html.twig',
-        ['recette' => $recette]
+#[Route('/recette/show/{id}', name:'app_show_recette', methods:['GET', 'POST'])]
+function Show(Recette $recette,
+Request $request,
+MarkRepository $markRepository,
+EntityManagerInterface $manager
+): Response {
+$mark = new Mark();
+$form = $this->createForm(MarkType::class, $mark);
+
+$form->handleRequest($request);
+if ($form->isSubmitted() && $form->isValid()) {
+    $mark->setUser($this->getUser())
+        ->setRecette($recette);
+
+    $existingMark = $markRepository->findOneBy([
+        'user' => $this->getUser(),
+        'recette' => $recette
+    ]);
+
+    if (!$existingMark) {
+        $manager->persist($mark);
+    } else {
+        $existingMark->setMark(
+            $form->getData()->getMark()
+        );
+    }
+
+    $manager->flush();
+
+    $this->addFlash(
+        'success',
+        'Votre note a bien été prise en compte.'
     );
+
+    return $this->redirectToRoute('app_show_recette', ['id' => $recette->getId()]);
 }
+
+return $this->render('pages/recette/show.html.twig', [
+    'recette' => $recette,
+    'form' => $form->createView()
+]);
+}
+
 
 }

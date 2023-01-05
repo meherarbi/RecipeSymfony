@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Ingredient;
+use App\Entity\Mark;
 use App\Entity\Recette;
 use App\Entity\Recipe;
 use App\Entity\User;
@@ -61,7 +62,7 @@ class AppFixtures extends Fixture
                 ->setNbPeople(mt_rand(0, 1) == 1 ? mt_rand(1, 50) : null)
                 ->setDifficulty(mt_rand(0, 1) == 1 ? mt_rand(1, 5) : null)
                 ->setDescription($this->faker->text(300))
-                ->setPrice(mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
+                ->setPrice(mt_rand(20, 300) )
                 ->setIsFavorite(mt_rand(0, 1) == 1 ? true : false)
                 ->setIsPublic(mt_rand(0, 1) == 1 ? true : false);
                 
@@ -72,6 +73,18 @@ class AppFixtures extends Fixture
 
             $recipes[] = $recipe;
             $manager->persist($recipe);
+        }
+        
+        // Marks
+        foreach ($recipes as $recipe) {
+            for ($i = 0; $i < mt_rand(0, 4); $i++) {
+                $mark = new Mark();
+                $mark->setMark(mt_rand(1, 5))
+                    ->setUser($users[mt_rand(0, count($users) - 1)])
+                    ->setRecette($recipe);
+
+                $manager->persist($mark);
+            }
         }
 
 

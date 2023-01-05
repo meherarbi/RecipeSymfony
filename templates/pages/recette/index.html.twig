@@ -15,19 +15,24 @@
         {{ message }}
     </div>
 {% endfor %}
-<div class="d-flex justify-content-center flex-wrap">
+<div class="d-flex justify-content-center flex-wrap m-2 ">
 
 {% for recettes in recettes %}
 
 
-<div class="card border-danger mb-3 " style="max-width: 20rem;">
+<div class="card border-danger mb-3 m-3" style="max-width: 20rem;">
   <div class="card-header"><small>{{ recettes.id}} </small><a href="{{path('app_show_recette' ,{'id': recettes.id})}}">{{recettes.name}}</a></div>
-  <span class="card-title ">  Publié le {{recettes.createdAt| format_datetime ('short', 'short', locale='tn')}}</span>
+  <span class="card-title m-3 ">  Publié le {{recettes.createdAt| format_datetime ('short', 'short', locale='tn')}}</span>
   <div class="card-body">
     <h4 class="card-title">{{recettes.price}} $</h4>
     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="{{path('app_edit_recette' ,{'id':recettes.id})}}" class="btn btn-info">Modifier</a>
+    
+    <small> Avis: {{recettes.average | number_format(2, '.', ',')}}</small>
+    <div class="  mx-5">
+    <a href="{{path('app_edit_recette' ,{'id':recettes.id})}}" class="btn btn-info mx-2">Modifier</a>
     <a href="{{path('app_delete_recette' ,{'id':recettes.id})}}" class="btn btn-danger">delete</a>
+    </div>
+    
   </div>
 </div>
 
