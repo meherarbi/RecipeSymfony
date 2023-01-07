@@ -8,6 +8,8 @@ use App\Repository\IngredientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,6 +48,7 @@ function index(IngredientRepository $ingredientRepository, PaginatorInterface $p
  * @return Response
  */
 #[Route('/ingredient/new', name:'app_new', methods:['GET', 'POST'])]
+
 function new (Request $request, EntityManagerInterface $manager): Response {
 
     $Ingredients = new Ingredient();
@@ -73,6 +76,7 @@ function new (Request $request, EntityManagerInterface $manager): Response {
 }
 
 #[Route('/ingredient/edit/{id}', name:'app_edit', methods:['GET', 'POST'])]
+#[Security("is_granted('ROLE_USER') and user === ingredient.getUser()")]
 function update(Ingredient $ingredient, Request $request, EntityManagerInterface $manager): Response
     {
 
@@ -98,6 +102,7 @@ function update(Ingredient $ingredient, Request $request, EntityManagerInterface
 }
 
 #[Route('/ingredient/delete/{id}', name:'app_delete', methods:['GET'])]
+#[Security("is_granted('ROLE_USER') and user === ingredient.getUser()")]
 function Delete(EntityManagerInterface $manager, Ingredient $ingredient)
     {
     $manager->remove($ingredient);
