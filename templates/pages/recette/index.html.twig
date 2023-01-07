@@ -28,6 +28,10 @@
     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
     
     <small> Avis: {{recettes.average | number_format(2, '.', ',')}}</small>
+    <div class="recipe__image">
+			<img style="max-width: 100%;" src="{{ vich_uploader_asset(recettes, 'imageFile') }}">
+		</div>
+<hr>
     <div class="  mx-5">
     <a href="{{path('app_edit_recette' ,{'id':recettes.id})}}" class="btn btn-info mx-2">Modifier</a>
     <a href="{{path('app_delete_recette' ,{'id':recettes.id})}}" class="btn btn-danger">delete</a>
