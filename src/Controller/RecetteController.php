@@ -13,6 +13,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -31,7 +32,7 @@ class RecetteController extends AbstractController
 function index(RecetteRepository $recetteRepository, PaginatorInterface $paginator, Request $request): Response
     {
    $recettes = $paginator->paginate(
-    $recetteRepository->findAll(),
+    $recetteRepository->findBy(['user' => $this->getUser()]),
     $request->query->getInt('page', 1), /*page number*/
     12/*limit per page*/
 );
@@ -76,6 +77,7 @@ function new (Request $request, EntityManagerInterface $manager): Response {
 }
 
 #[Route('/recette/edit/{id}', name:'app_edit_recette', methods:['GET', 'POST'])]
+#[Security("is_granted('ROLE_USER') and user === recette.getUser()")]
 function update(Recette $recette, Request $request, EntityManagerInterface $manager): Response
     {
 
@@ -101,6 +103,7 @@ function update(Recette $recette, Request $request, EntityManagerInterface $mana
 }
 
 #[Route('/recette/delete/{id}', name:'app_delete_recette', methods:['GET'])]
+#[Security("is_granted('ROLE_USER') and user === recette.getUser()")]
 function Delete(EntityManagerInterface $manager, Recette $recette)
     {
     $manager->remove($recette);
@@ -114,6 +117,7 @@ function Delete(EntityManagerInterface $manager, Recette $recette)
 }
 
 #[Route('/recette/show/{id}', name:'app_show_recette', methods:['GET', 'POST'])]
+#[Security("is_granted('ROLE_USER') and user === recette.getUser()")]
 function Show(Recette $recette,
 Request $request,
 MarkRepository $markRepository,

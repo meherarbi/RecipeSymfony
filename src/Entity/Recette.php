@@ -3,14 +3,15 @@
 namespace App\Entity;
 
 use App\Entity\Mark;
+use App\Entity\User;
 use Vich\UploadableField;
 use App\Entity\Ingredient;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RecetteRepository;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: RecetteRepository::class)]
@@ -69,6 +70,10 @@ class Recette
     private Collection $marks;
 
     private ?float $average = null;
+
+    #[ORM\ManyToOne(inversedBy: 'Recette')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -295,6 +300,18 @@ class Recette
                 $mark->setRecette(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
