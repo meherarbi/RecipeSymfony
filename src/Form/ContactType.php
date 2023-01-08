@@ -78,11 +78,11 @@ class ContactType extends AbstractType
                     'class' => 'btn btn-primary mt-4'
                 ],
                 'label' => 'Soumettre ma demande'
-            ]);
-          /*   ->add('captcha', Recaptcha3Type::class, [
+            ])
+            ->add('captcha', Recaptcha3Type::class, [
                 'constraints' => new Recaptcha3(['message' => 'There were problems with your captcha. Please try again or contact with support and provide following code(s): {{ errorCodes }}']),
                 'action_name' => 'contact',
-            ]); */
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
