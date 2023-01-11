@@ -3,13 +3,16 @@
 namespace App\Tests\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class homePageTest extends WebTestCase
 {
-    public function testSomething(): void
+    public function testHomePage(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
 
         $this->assertResponseIsSuccessful();
 

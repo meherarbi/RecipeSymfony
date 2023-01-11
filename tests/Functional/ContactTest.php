@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class ContactTest extends WebTestCase
 {
    
-    public function testSomething(): void
+    public function testIfSubmitContactFormIsSuccessfull(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/contact');
